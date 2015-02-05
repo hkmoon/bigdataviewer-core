@@ -7,6 +7,7 @@ import java.net.URL;
 
 import net.imglib2.img.basictypeaccess.volatiles.array.VolatileShortArray;
 import bdv.img.cache.CacheArrayLoader;
+import utils.RecordQuery;
 
 public class RemoteVolatileShortArrayLoader implements CacheArrayLoader< VolatileShortArray >
 {
@@ -25,9 +26,10 @@ public class RemoteVolatileShortArrayLoader implements CacheArrayLoader< Volatil
 	{
 		final int index = imgLoader.getCellIndex( timepoint, setup, level, min );
 		final short[] data = new short[ dimensions[ 0 ] * dimensions[ 1 ] * dimensions[ 2 ] ];
+
 		try
 		{
-			final URL url = new URL( String.format( "%s?p=cell/%d/%d/%d/%d/%d/%d/%d/%d/%d/%d",
+			String query = String.format( "%s?p=cell/%d/%d/%d/%d/%d/%d/%d/%d/%d/%d",
 					imgLoader.baseUrl,
 					index,
 					timepoint,
@@ -38,7 +40,11 @@ public class RemoteVolatileShortArrayLoader implements CacheArrayLoader< Volatil
 					dimensions[ 2 ],
 					min[ 0 ],
 					min[ 1 ],
-					min[ 2 ] ) );
+					min[ 2 ] );
+
+			RecordQuery.getInstance().record(query);
+
+			final URL url = new URL( query );
 			final InputStream s = url.openStream();
 			final byte[] buf = new byte[ data.length * 2 ];
 			for ( int i = 0, l = s.read( buf, 0, buf.length ); l > 0; i += l, l = s.read( buf, i, buf.length - i ) );
