@@ -495,7 +495,7 @@ public class BigDataViewer
 	protected boolean tryLoadSettings( final String xmlFilename )
 	{
 		proposedSettingsFile = null;
-		if( xmlFilename.startsWith( "http://" ) )
+		if ( xmlFilename.startsWith( "http://" ) || xmlFilename.startsWith( "https://" ) )
 		{
 			// load settings.xml from the BigDataServer
 			final String settings = xmlFilename + "settings";
@@ -667,7 +667,16 @@ public class BigDataViewer
 	@Deprecated
 	public static void view( final String filename, final ProgressWriter progressWriter ) throws SpimDataException
 	{
-		open( filename, new File( filename ).getName(), progressWriter );
+		view( filename, new File( filename ).getName(), progressWriter );
+	}
+
+	/**
+	 * Deprecated, please use {@link #open(String, String, ProgressWriter)} instead.
+	 */
+	@Deprecated
+	public static void view( final String title, final String filename, final ProgressWriter progressWriter ) throws SpimDataException
+	{
+		open( filename, title, progressWriter );
 	}
 
 	public static void main( final String[] args )
